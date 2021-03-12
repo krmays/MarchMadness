@@ -1,4 +1,4 @@
-# Hi, world!
+# Hello again, world!
 #
 # This is an example function named 'hello'
 # which prints 'Hello, world!'.

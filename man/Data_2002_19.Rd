@@ -11,8 +11,8 @@ A data frame with the following columns:
 
 \item{team}{test}
 \item{year}{test}
-\item{region}{...}
-\item{seed}{...}
+\item{region}{test}
+\item{seed}{test2}
 \item{play.in}{...}
 \item{rd_1}{...}
 \item{rd_2}{...}

@@ -33,8 +33,7 @@ x_train <- x1
 y_train <- y1
 x_test <- Data_2002_19[which(Data_2002_19[, 2]=="2017"), c(4, seq(12, 38, by = 2))]
 y_test <- Data_2002_19$rd_1[which(Data_2002_19[, 2]=="2017")]
-#do I need these here? which nt and nte do I use? are they the same as p1 and n?
-nt = n; nte = p1
+nt = length(y_train); nte = length(y_test)
 C=2; classes=c(0,1)
 prob_results_CQS <- matrix(0,length(tau),nte)
 prob_results_reg <- matrix(0,length(tau),nte)
@@ -45,20 +44,9 @@ for (i in 1:p1){
   x_test[,i]=(x_test[,i]-apply(x_test, 2, mean)[i])/apply(x_test, 2, sd)[i]
 }
 
-# classical CQS
-library(quantdr)
-output_cqs=cqs(x_train,y_train,tau)
-# when I start with this quantdr:: I get the error "object'quantdr' not found"
-dhat=output_cqs$dtau #do I need a separate variable here, or can I just use dtau?
-#beta_hat_cqs=output_cqs$out[,1:dhat] #this is returning NULL (options are qvalues and qvectors, no $out)
-beta_hat_cqs=output_cqs$qvectors[,1:dhat] #$qvectors should have the right number of dimension, so what's causing the dimension error?
-
-if (dhat<2){ #why this?
-  dhat=2
-}
-#everything below this does not yet work because beta_hat_cqs is returning NULL
-new_data_train_cqs=x_train%*%beta_hat_cqs[,1:dhat]
-new_data_test_cqs=x_test%*%beta_hat_cqs[,1:dhat]
+new_data_train_cqs = new_data1
+new_data_test_cqs = as.matrix(x_test)%*%beta_hat1
+# waiting on helping R file here (go ahead and test)
 fit_cqs <- BBQ.grplasso(y_train~new_data_train_cqs, tau, c(1,2), method='Binary', Run=1500, burn=500,Ce=0,scale=TRUE)
 cqs_prob<-BBQ.prob(fit_cqs,new_data_test_cqs)$p1x
 prob_results_cqs[j,]=cqs_prob

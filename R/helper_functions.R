@@ -1,4 +1,6 @@
-#Predicted probabilities of y given x from the binary quantile regression model with group lasso.
+#' Used in the Round1_pred.R function
+#' Predicted probabilities of y given x from the binary quantile regression model with group lasso.
+
 BBQ.prob <- function(bbq.out, x.test) {
   beta <- bbq.out$beta
   tau <- bbq.out$tau
@@ -20,8 +22,8 @@ BBQ.prob <- function(bbq.out, x.test) {
 
 
 
-
-#Main function for binary quantile regression with group lasso
+#' Used in the Round1_pred.R function
+#' Main function for binary quantile regression with group lasso
 BBQ.grplasso <- function(formula, tau, group, method = c("Continuous", "Binary", "Tobit"),
                          Run = 15000, burn = 5000, Ce = 0,  scale = TRUE) {
   X= x = formula[3][[1]]

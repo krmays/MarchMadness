@@ -1,4 +1,4 @@
-#' @include helper_functions.R
+source('R/helper_functions.R')
 
 # Predicting the outcome of tournaments - Round 1
 path = 'data/Data_2002_19.rda'

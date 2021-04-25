@@ -1,4 +1,4 @@
-#' @include bic_d.R
+#' @include helper_functions.R
 
 # Predicting the outcome of tournaments - Round 1
 path = 'data/Data_2002_19.rda'

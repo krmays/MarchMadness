@@ -1,3 +1,5 @@
+#' @import stats
+
 #' Used in the Round1_pred.R function
 #' Predicted probabilities of y given x from the binary quantile regression model with group lasso.
 

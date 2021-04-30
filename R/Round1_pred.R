@@ -11,9 +11,10 @@ year <- "2017"
 y_train <- Data_2002_19$rd_1[which(Data_2002_19[, 2] <= as.character(as.numeric(year) - 1))]
 x_train <- Data_2002_19[which(Data_2002_19[, 2] <= as.character(as.numeric(year) - 1)),
                         c(4, seq(12, 38, by = 2))]
-y_test <- Data_2002_19$rd_1[which(Data_2002_19[, 2] == "2017")]
-x_test <- Data_2002_19[which(Data_2002_19[, 2] == "2017"), c(4, seq(12, 38, by = 2))]
-
+#y_test <- Data_2002_19$rd_1[which(Data_2002_19[, 2] == "2017")]
+y_test <- Data_2002_19$rd_1[which(Data_2002_19[, 2] == as.character(year))]
+#x_test <- Data_2002_19[which(Data_2002_19[, 2] == "2017"), c(4, seq(12, 38, by = 2))]
+x_test <- Data_2002_19[which(Data_2002_19[, 2] == as.character(year)), c(4, seq(12, 38, by = 2))]
 x_train <- as.matrix(x_train)
 x_test <- as.matrix(x_test)
 
@@ -21,7 +22,8 @@ x_test <- as.matrix(x_test)
 n_train <- length(y_train)
 n_test <- length(y_test)
 p <- dim(x_train)[2]
-tau <- 0.1
+taus = c(0.1, 0.25, 0.5, 0.75, 0.9)
+prob_matrix <- matrix(0,length(taus),n_test)
 C = 2 # number of classification groups
 classes = c(0, 1) # classification groups
 
@@ -29,22 +31,27 @@ classes = c(0, 1) # classification groups
 y_train_dis <- y_train + .00001 * mean(y_train) * rnorm(n_train)
 
 # apply the cqs function and perform dimension reduction
-out <- quantdr::cqs(x_train, y_train_dis, tau)
-dtau_hat <- out$dtau
-# the BBQ.grplasso algorithm requires at least two predictor variables
-if (dtau_hat < 2) {
+for (j in 1:length(taus)){ #new
+  out <- quantdr::cqs(x_train, y_train_dis, taus[j])
+  dtau_hat <- out$dtau
+  # the BBQ.grplasso algorithm requires at least two predictor variables
+  if (dtau_hat < 2) {
   dtau_hat = 2
-}
-beta_hat <- cbind(out$qvectors[, 1:dtau_hat])
+  }
+  beta_hat <- cbind(out$qvectors[, 1:dtau_hat])
 
-# define the new sufficient predictors
-new_data_train <- x_train %*% beta_hat
-new_data_test <- x_test %*% beta_hat
+  # define the new sufficient predictors
+  new_data_train <- x_train %*% beta_hat
+  new_data_test <- x_test %*% beta_hat
 
-# run the classification
-fit <- BBQ.grplasso(y_train ~ new_data_train, tau, c(1, 2), method = 'Binary', Run = 1500,
+  # run the classification
+  fit <- BBQ.grplasso(y_train ~ new_data_train, taus[j], c(1, 2), method = 'Binary', Run = 1500,
                     burn = 500, Ce = 0, scale = TRUE)
-prob_fit <- BBQ.prob(fit, new_data_test)$p1x
 
+  # In model.matrix.default(mt, mf, contrasts) : non-list contrasts argument ignored
+  prob_fit <- BBQ.prob(fit, new_data_test)$p1x
+  prob_matrix[j,] = prob_fit
+}
 
-
+# find average across quantiles
+avg_prob <- apply(prob_matrix,2,mean)

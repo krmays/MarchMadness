@@ -20,12 +20,12 @@ x_test <- as.matrix(x_test)
 n_train <- length(y_train)
 n_test <- length(y_test)
 p <- dim(x_train)[2]
-taus = c(0.1, 0.25, 0.5, 0.75, 0.9)
+taus = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
 prob_matrix <- matrix(0,length(taus),n_test)
 C = 2 # number of classification groups
 classes = c(0, 1) # classification groups
 
-# descretize y_train to be applicable to the cqs function
+# discretize y_train to be applicable to the cqs function
 y_train_dis <- y_train + .00001 * mean(y_train) * rnorm(n_train)
 
 # apply the cqs function and perform dimension reduction

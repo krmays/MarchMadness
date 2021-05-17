@@ -1,6 +1,6 @@
 source('R/helper_functions.R')
 
-# Predicting the outcome of tournaments - Round 1
+# Predicting the outcome of tournaments - Round 2
 path = 'data/Data_2002_19.rda'
 load(path)
 
@@ -11,8 +11,9 @@ year <- "2017"
 y_train <- Data_2002_19$rd_2[which(Data_2002_19[, 6] == 1 & Data_2002_19[, 2] <= as.character(as.numeric(year) - 1))]
 x_train <- Data_2002_19[which(Data_2002_19[, 6] == 1 & Data_2002_19[, 2] <= as.character(as.numeric(year) - 1)),
                         c(4, seq(12, 38, by = 2))]
-y_test <- Data_2002_19$rd_1[which(Data_2002_19[, 6] == 1 & Data_2002_19[, 2] == as.character(year))]
-x_test <- Data_2002_19[which(Data_2002_19[, 6] == 1 & Data_2002_19[, 2] == as.character(year)), c(4, seq(12, 38, by = 2))]
+#These 2 lines are dependent on having Rd1_winners from Rd1.
+y_test <- Data_2002_19$rd_2[which(Data_2002_19[, 2] == as.character(year) & Data_2002_19[, 1] %in% Rd1_winners$team)]
+x_test <- Data_2002_19[which(Data_2002_19[, 2] == as.character(year) & Data_2002_19[, 1] %in% Rd1_winners$team), c(4, seq(12, 38, by = 2))]
 x_train <- as.matrix(x_train)
 x_test <- as.matrix(x_test)
 
@@ -52,4 +53,4 @@ for (j in 1:length(taus)){ #new
 }
 
 # find average across quantiles
-avg_prob <- apply(prob_matrix,2,mean)
+avg_prob2 <- apply(prob_matrix,2,mean) #I renamed this so it is distinguishable from the probabilities in Rd. 1 when setting up Rd. 2

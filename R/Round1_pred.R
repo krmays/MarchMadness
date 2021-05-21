@@ -4,15 +4,15 @@ source('R/helper_functions.R')
 path = 'data/Data_2002_19.rda'
 load(path)
 
-year <- "2017"
+season <- "2017"
 
 # define the data
 # x defines the season-long stats only
-y_train <- Data_2002_19$rd_1[which(Data_2002_19[, 2] <= as.character(as.numeric(year) - 1))]
-x_train <- Data_2002_19[which(Data_2002_19[, 2] <= as.character(as.numeric(year) - 1)),
+y_train <- Data_2002_19$rd_1[which(Data_2002_19[, 2] <= as.character(as.numeric(season) - 1))]
+x_train <- Data_2002_19[which(Data_2002_19[, 2] <= as.character(as.numeric(season) - 1)),
                         c(4, seq(12, 38, by = 2))]
-y_test <- Data_2002_19$rd_1[which(Data_2002_19[, 2] == as.character(year))]
-x_test <- Data_2002_19[which(Data_2002_19[, 2] == as.character(year)), c(4, seq(12, 38, by = 2))]
+y_test <- Data_2002_19$rd_1[which(Data_2002_19[, 2] == as.character(season))]
+x_test <- Data_2002_19[which(Data_2002_19[, 2] == as.character(season)), c(4, seq(12, 38, by = 2))]
 x_train <- as.matrix(x_train)
 x_test <- as.matrix(x_test)
 

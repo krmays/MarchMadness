@@ -54,3 +54,4 @@ for (j in 1:length(taus)){ #new
 
 # find average across quantiles
 avg_prob3 <- apply(prob_matrix,2,mean)
+

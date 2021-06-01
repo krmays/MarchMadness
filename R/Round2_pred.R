@@ -22,10 +22,10 @@ x_test <- as.matrix(x_test)
 n_train <- length(y_train)
 n_test <- length(y_test)
 p <- dim(x_train)[2]
-taus = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
-prob_matrix <- matrix(0,length(taus),n_test)
-C = 2 # number of classification groups
-classes = c(0, 1) # classification groups
+taus <- c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
+prob_matrix <- matrix(0, length(taus), n_test)
+C <- 2 # number of classification groups
+classes <- c(0, 1) # classification groups
 
 # discretize y_train to be applicable to the cqs function
 y_train_dis <- y_train + .00001 * mean(y_train) * rnorm(n_train)
@@ -50,8 +50,8 @@ for (j in 1:length(taus)){ #new
 
   # In model.matrix.default(mt, mf, contrasts) : non-list contrasts argument ignored
   prob_fit <- BBQ.prob(fit, new_data_test)$p1x
-  prob_matrix[j,] = prob_fit
+  prob_matrix[j, ] <- prob_fit
 }
 
 # find average across quantiles
-avg_prob2 <- apply(prob_matrix,2,mean)
+avg_prob2 <- apply(prob_matrix, 2, mean)

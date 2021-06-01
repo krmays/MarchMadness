@@ -13,7 +13,8 @@ x_train <- Data_2002_19[which(Data_2002_19[, 6] == 1 & Data_2002_19[, 2] <= as.c
                         c(4, seq(12, 38, by = 2))]
 #These 2 lines are dependent on having Rd1_winners from Rd1.
 y_test <- Data_2002_19$rd_2[which(Data_2002_19[, 2] == as.character(season) & Data_2002_19[, 1] %in% Rd1_winners$team)]
-x_test <- Data_2002_19[which(Data_2002_19[, 2] == as.character(season) & Data_2002_19[, 1] %in% Rd1_winners$team), c(4, seq(12, 38, by = 2))]
+x_test <- Data_2002_19[which(Data_2002_19[, 2] == as.character(season) & Data_2002_19[, 1] %in% Rd1_winners$team),
+                       c(4, seq(12, 38, by = 2))]
 x_train <- as.matrix(x_train)
 x_test <- as.matrix(x_test)
 

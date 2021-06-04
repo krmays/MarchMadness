@@ -4,7 +4,7 @@ source('R/helper_functions.R')
 path = 'data/Data_2002_19.rda'
 load(path)
 
-season <- "2017"
+season <- "2016"
 
 # define the data
 # x defines the season-long stats only
@@ -53,3 +53,20 @@ for (j in 1:length(taus)){ #new
 
 # find average across quantiles
 avg_prob <- apply(prob_matrix, 2, mean)
+
+# arrange data by game matchup
+colnames(Data_2002_19)[1] <- "team" #rename the first column
+Rd1 <- subset(Data_2002_19, year == season, c("region", "team", "seed")) #pull out only the columns we need to set up game matrix
+library(dplyr)
+Rd1 <- dplyr::arrange(Rd1, region, seed) #make sure that teams really are arranged by seed
+game.order <- rep(c(1:8, 8:1), 4)
+Rd1$game = game.order
+Rd1$prob = avg_prob # DOES THE ORDER OF THE TEAMS CHANGE?? You sort the data, but the probabilities are merged - not necessarily connected with the correct team
+Rd1 <- Rd1[, c("region", "game", "seed", "team", "prob")]
+Rd1 <- dplyr::arrange(Rd1, region, game, -prob)
+win <- rep(c(1:0), 32)
+Rd1$win <- rep(c(1:0), 32)
+
+# pull out winners only
+Rd1_winners <- subset(Rd1, Rd1$win == 1)
+Rd1_winners

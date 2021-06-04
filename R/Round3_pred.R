@@ -4,14 +4,13 @@ source('R/helper_functions.R')
 path = 'data/Data_2002_19.rda'
 load(path)
 
-season <- "2017"
+season <- "2016"
 
 # define the data
 # x defines the season-long stats only
 y_train <- Data_2002_19$rd_3[which(Data_2002_19[, 7] == 1 & Data_2002_19[, 2] <= as.character(as.numeric(season) - 1))]
 x_train <- Data_2002_19[which(Data_2002_19[, 7] == 1 & Data_2002_19[, 2] <= as.character(as.numeric(season) - 1)),
                         c(4, seq(12, 38, by = 2))]
-#These 2 lines are dependent on having Rd2_winners from Rd2.
 y_test <- Data_2002_19$rd_3[which(Data_2002_19[, 2] == as.character(season) & Data_2002_19[, 1] %in% Rd2_winners$team)]
 x_test <- Data_2002_19[which(Data_2002_19[, 2] == as.character(season) & Data_2002_19[, 1] %in% Rd2_winners$team),
                        c(4, seq(12, 38, by = 2))]
@@ -56,3 +55,17 @@ for (j in 1:length(taus)){ #new
 # find average across quantiles
 avg_prob3 <- apply(prob_matrix, 2, mean)
 
+# arrange games by matchup
+Rd3 <- Rd2_winners[, c(1, 3:4)]
+game.order <- rep(c(1:2, 2:1), 4)
+Rd3$game <- game.order
+Rd3$prob <- avg_prob3
+Rd3 <- Rd3[, c("region", "game", "seed", "team", "prob")]
+library(dplyr)
+Rd3 <- dplyr::arrange(Rd3, region, game, -prob)
+win3 <- rep(c(1:0), 8)
+Rd3$win <- rep(c(1:0), 8)
+
+# Rd3 win predictions
+Rd3_winners <- subset(Rd3, Rd3$win == 1)
+Rd3_winners

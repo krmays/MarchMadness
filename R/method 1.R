@@ -1,18 +1,18 @@
 source('R/helper_functions.R')
 
 ### Predicting the outcome of tournaments - Round 1
-path = 'data/Data_2002_19.rda'
+path = 'data/Data_2002_21.rda'
 load(path)
 
-season <- "2013"
+season <- "2017"
 
 # define the data
 # x defines the season-long stats only
-y_train <- Data_2002_19$rd_1[which(Data_2002_19[, 2] <= as.character(as.numeric(season) - 1))]
-x_train <- Data_2002_19[which(Data_2002_19[, 2] <= as.character(as.numeric(season) - 1)),
+y_train <- Data_2002_19$rd_1[which(Data_2002_21[, 2] <= as.character(as.numeric(season) - 1))]
+x_train <- Data_2002_19[which(Data_2002_21[, 2] <= as.character(as.numeric(season) - 1)),
                         c(seq(12, 38, by = 2))]
-y_test <- Data_2002_19$rd_1[which(Data_2002_19[, 2] == as.character(season))]
-x_test <- Data_2002_19[which(Data_2002_19[, 2] == as.character(season)), c(seq(12, 38, by = 2))]
+y_test <- Data_2002_19$rd_1[which(Data_2002_21[, 2] == as.character(season))]
+x_test <- Data_2002_19[which(Data_2002_21[, 2] == as.character(season)), c(seq(12, 38, by = 2))]
 x_train <- as.matrix(x_train)
 x_test <- as.matrix(x_test)
 
@@ -55,8 +55,8 @@ for (j in 1:length(taus)){ #new
 avg_prob <- apply(prob_matrix, 2, mean)
 
 # arrange data by game matchup
-colnames(Data_2002_19)[1] <- "team" #rename the first column
-Rd1 <- subset(Data_2002_19, year == season, c("region", "team", "seed")) #pull out only the columns we need to set up game matrix
+colnames(Data_2002_21)[1] <- "team" #rename the first column
+Rd1 <- subset(Data_2002_21, year == season, c("region", "team", "seed")) #pull out only the columns we need to set up game matrix
 Rd1 <- dplyr::arrange(Rd1, region, seed) #make sure that teams really are arranged by seed
 game.order <- rep(c(1:8, 8:1), 4)
 Rd1$game = game.order
@@ -74,11 +74,11 @@ Rd1_winners
 
 # define the data
 # x defines the season-long stats only
-y_train <- Data_2002_19$rd_2[which(Data_2002_19[, 6] == 1 & Data_2002_19[, 2] <= as.character(as.numeric(season) - 1))]
-x_train <- Data_2002_19[which(Data_2002_19[, 6] == 1 & Data_2002_19[, 2] <= as.character(as.numeric(season) - 1)),
+y_train <- Data_2002_21$rd_2[which(Data_2002_21[, 6] == 1 & Data_2002_19[, 2] <= as.character(as.numeric(season) - 1))]
+x_train <- Data_2002_21[which(Data_2002_21[, 6] == 1 & Data_2002_19[, 2] <= as.character(as.numeric(season) - 1)),
                         c(seq(12, 38, by = 2))]
-y_test <- Data_2002_19$rd_2[which(Data_2002_19[, 2] == as.character(season) & Data_2002_19[, 1] %in% Rd1_winners$team)]
-x_test <- Data_2002_19[which(Data_2002_19[, 2] == as.character(season) & Data_2002_19[, 1] %in% Rd1_winners$team),
+y_test <- Data_2002_21$rd_2[which(Data_2002_21[, 2] == as.character(season) & Data_2002_19[, 1] %in% Rd1_winners$team)]
+x_test <- Data_2002_21[which(Data_2002_21[, 2] == as.character(season) & Data_2002_19[, 1] %in% Rd1_winners$team),
                        c(seq(12, 38, by = 2))]
 x_train <- as.matrix(x_train)
 x_test <- as.matrix(x_test)
@@ -88,8 +88,6 @@ n_train <- length(y_train)
 n_test <- length(y_test)
 p <- dim(x_train)[2]
 prob_matrix <- matrix(0, length(taus), n_test)
-C <- 2 # number of classification groups #Do we need this for each round?
-classes <- c(0, 1) # classification groups #Do we need this for each round?
 
 # discretize y_train to be applicable to the cqs function
 y_train_dis <- y_train + .00001 * mean(y_train) * rnorm(n_train)
@@ -138,11 +136,11 @@ Rd2_winners
 
 # define the data
 # x defines the season-long stats only
-y_train <- Data_2002_19$rd_3[which(Data_2002_19[, 7] == 1 & Data_2002_19[, 2] <= as.character(as.numeric(season) - 1))]
-x_train <- Data_2002_19[which(Data_2002_19[, 7] == 1 & Data_2002_19[, 2] <= as.character(as.numeric(season) - 1)),
+y_train <- Data_2002_21$rd_3[which(Data_2002_21[, 7] == 1 & Data_2002_19[, 2] <= as.character(as.numeric(season) - 1))]
+x_train <- Data_2002_21[which(Data_2002_21[, 7] == 1 & Data_2002_19[, 2] <= as.character(as.numeric(season) - 1)),
                         c(seq(12, 38, by = 2))]
-y_test <- Data_2002_19$rd_3[which(Data_2002_19[, 2] == as.character(season) & Data_2002_19[, 1] %in% Rd2_winners$team)]
-x_test <- Data_2002_19[which(Data_2002_19[, 2] == as.character(season) & Data_2002_19[, 1] %in% Rd2_winners$team),
+y_test <- Data_2002_21$rd_3[which(Data_2002_21[, 2] == as.character(season) & Data_2002_19[, 1] %in% Rd2_winners$team)]
+x_test <- Data_2002_21[which(Data_2002_19[, 2] == as.character(season) & Data_2002_19[, 1] %in% Rd2_winners$team),
                        c(seq(12, 38, by = 2))]
 x_train <- as.matrix(x_train)
 x_test <- as.matrix(x_test)

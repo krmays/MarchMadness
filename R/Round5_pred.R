@@ -16,7 +16,7 @@ Rd5_winners
 
 source('R/helper_functions.R')
 
-# Predicting the outcome of tournaments - Round 4
+# Predicting the outcome of tournaments - Round 5
 path = 'data/Data_2002_19.rda'
 load(path)
 

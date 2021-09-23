@@ -4,15 +4,15 @@ source('R/helper_functions.R')
 path = 'data/Data_2002_21.rda'
 load(path)
 
-season <- "2018"
+season <- "2012"
 
 # define the data
-# x defines the season-long stats only
+# x defines the last 3 game stats only
 y_train <- Data_2002_21$rd_1[which(Data_2002_21[, 2] <= as.character(as.numeric(season) - 1))]
 x_train <- Data_2002_21[which(Data_2002_21[, 2] <= as.character(as.numeric(season) - 1)),
-                        c(4, seq(12, 38, by = 2))]
+                        c(4, seq(13, 39, by = 2))]
 y_test <- Data_2002_21$rd_1[which(Data_2002_21[, 2] == as.character(season))]
-x_test <- Data_2002_21[which(Data_2002_21[, 2] == as.character(season)), c(4, seq(12, 38, by = 2))]
+x_test <- Data_2002_21[which(Data_2002_21[, 2] == as.character(season)), c(4, seq(13, 39, by = 2))]
 x_train <- as.matrix(x_train)
 x_test <- as.matrix(x_test)
 
@@ -76,10 +76,10 @@ Rd1_winners
 # x defines the season-long stats only
 y_train <- Data_2002_21$rd_2[which(Data_2002_21[, 6] == 1 & Data_2002_21[, 2] <= as.character(as.numeric(season) - 1))]
 x_train <- Data_2002_21[which(Data_2002_21[, 6] == 1 & Data_2002_21[, 2] <= as.character(as.numeric(season) - 1)),
-                        c(4, seq(12, 38, by = 2))]
+                        c(4, seq(13, 39, by = 2))]
 y_test <- Data_2002_21$rd_2[which(Data_2002_21[, 2] == as.character(season) & Data_2002_21[, 1] %in% Rd1_winners$team)]
 x_test <- Data_2002_21[which(Data_2002_21[, 2] == as.character(season) & Data_2002_21[, 1] %in% Rd1_winners$team),
-                       c(4, seq(12, 38, by = 2))]
+                       c(4, seq(13, 39, by = 2))]
 x_train <- as.matrix(x_train)
 x_test <- as.matrix(x_test)
 
@@ -138,10 +138,10 @@ Rd2_winners
 # x defines the season-long stats only
 y_train <- Data_2002_21$rd_3[which(Data_2002_21[, 7] == 1 & Data_2002_21[, 2] <= as.character(as.numeric(season) - 1))]
 x_train <- Data_2002_21[which(Data_2002_21[, 7] == 1 & Data_2002_21[, 2] <= as.character(as.numeric(season) - 1)),
-                        c(4, seq(12, 38, by = 2))]
+                        c(4, seq(13, 39, by = 2))]
 y_test <- Data_2002_21$rd_3[which(Data_2002_21[, 2] == as.character(season) & Data_2002_21[, 1] %in% Rd2_winners$team)]
 x_test <- Data_2002_21[which(Data_2002_21[, 2] == as.character(season) & Data_2002_21[, 1] %in% Rd2_winners$team),
-                       c(4, seq(12, 38, by = 2))]
+                       c(4, seq(13, 39, by = 2))]
 x_train <- as.matrix(x_train)
 x_test <- as.matrix(x_test)
 

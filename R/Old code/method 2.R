@@ -5,6 +5,7 @@ path = 'data/Data_2002_21.rda'
 load(path)
 
 season <- "2018"
+set.seed(1234)
 #matchup options for Rd. 5: 1 (East v. Midwest), 2 (East v. South), 3 (East v. West)
 matchup <- 1
 

@@ -1,12 +1,13 @@
-### Predicting the outcome of tournaments - Round 1
+### Predicting the outcome of March Madness tournament by round
 path = 'data/Data_2002_21.rda'
 load(path)
 
+#declare the season for round 5 matchups between regions
 season <- "2015"
 #matchup options for Rd. 5: 1 (East v. Midwest), 2 (East v. South), 3 (East v. West)
 matchup <- 2
 
-# 2019 option 3, 2018 option 1, 2017 option 3, 2016 option 1, 2015 option 2, 2021 option 3
+## 2019 option 3, 2018 option 1, 2017 option 3, 2016 option 1, 2015 option 2, 2021 option 3
 
 #define the data, full season, no window
 y_train <- Data_2002_21$rd_1[which(Data_2002_21[, 2] <= as.character(as.numeric(season) - 1))]
@@ -30,7 +31,7 @@ set.seed(1234)
 y_train_dis <- y_train + .00001 * mean(y_train) * rnorm(n_train)
 
 # apply the cqs function and perform dimension reduction
-for (j in 1:length(taus)){ #new
+for (j in 1:length(taus)){
   out <- quantdr::cqs(x_train, y_train_dis, taus[j])
   dtau_hat <- out$dtau
   beta_hat <- cbind(out$qvectors[, 1:dtau_hat])
@@ -73,7 +74,7 @@ Rd1_winners
 
 ### Round 2
 
-# x defines full season data
+# define the data
 y_train <- Data_2002_21$rd_2[which(Data_2002_21[, 6] == 1 & Data_2002_21[, 2] <= as.character(as.numeric(season) - 1))]
 x_train <- Data_2002_21[which(Data_2002_21[, 6] == 1 & Data_2002_21[, 2] <= as.character(as.numeric(season) - 1)), c(4, seq(12, 38, by = 2))]
 y_test <- Data_2002_21$rd_2[which(Data_2002_21[, 2] == as.character(season) & Data_2002_21[, 1] %in% Rd1_winners$team)]
@@ -92,7 +93,7 @@ set.seed(1234)
 y_train_dis <- y_train + .00001 * mean(y_train) * rnorm(n_train)
 
 # apply the cqs function and perform dimension reduction
-for (j in 1:length(taus)){ #new
+for (j in 1:length(taus)){
   out <- quantdr::cqs(x_train, y_train_dis, taus[j])
   dtau_hat <- out$dtau
   beta_hat <- cbind(out$qvectors[, 1:dtau_hat])
@@ -153,7 +154,7 @@ set.seed(1234)
 y_train_dis <- y_train + .00001 * mean(y_train) * rnorm(n_train)
 
 # apply the cqs function and perform dimension reduction
-for (j in 1:length(taus)){ #new
+for (j in 1:length(taus)){
   out <- quantdr::cqs(x_train, y_train_dis, taus[j])
   dtau_hat <- out$dtau
   beta_hat <- cbind(out$qvectors[, 1:dtau_hat])
@@ -214,7 +215,7 @@ set.seed(1234)
 y_train_dis <- y_train + .00001 * mean(y_train) * rnorm(n_train)
 
 # apply the cqs function and perform dimension reduction
-for (j in 1:length(taus)){ #new
+for (j in 1:length(taus)){
   out <- quantdr::cqs(x_train, y_train_dis, taus[j])
   dtau_hat <- out$dtau
   beta_hat <- cbind(out$qvectors[, 1:dtau_hat])
@@ -273,7 +274,7 @@ set.seed(1234)
 y_train_dis <- y_train + .00001 * mean(y_train) * rnorm(n_train)
 
 # apply the cqs function and perform dimension reduction
-for (j in 1:length(taus)){ #new
+for (j in 1:length(taus)){
   out <- quantdr::cqs(x_train, y_train_dis, taus[j])
   dtau_hat <- out$dtau
   beta_hat <- cbind(out$qvectors[, 1:dtau_hat])
@@ -336,7 +337,7 @@ set.seed(1234)
 y_train_dis <- y_train + .00001 * mean(y_train) * rnorm(n_train)
 
 # apply the cqs function and perform dimension reduction
-for (j in 1:length(taus)){ #new
+for (j in 1:length(taus)){
   out <- quantdr::cqs(x_train, y_train_dis, taus[j])
   dtau_hat <- out$dtau
   beta_hat <- cbind(out$qvectors[, 1:dtau_hat])

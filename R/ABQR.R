@@ -1,20 +1,20 @@
 ### Predicting the outcome of March Madness tournament by round
-path = 'data/Data_2002_21.rda'
+path = 'data/Data_2002_22.rda'
 load(path)
 
 #declare the season for round 5 matchups between regions
-season <- "2015"
+season <- "2022"
 #matchup options for Rd. 5: 1 (East v. Midwest), 2 (East v. South), 3 (East v. West)
-matchup <- 2
+matchup <- 3
 
 ## 2019 option 3, 2018 option 1, 2017 option 3, 2016 option 1, 2015 option 2, 2021 option 3
 
 #define the data, full season, no window
-y_train <- Data_2002_21$rd_1[which(Data_2002_21[, 2] <= as.character(as.numeric(season) - 1))]
-x_train <- Data_2002_21[which(Data_2002_21[, 2] <= as.character(as.numeric(season) - 1)),
+y_train <- Data_2002_22$rd_1[which(Data_2002_22[, 2] <= as.character(as.numeric(season) - 1))]
+x_train <- Data_2002_22[which(Data_2002_22[, 2] <= as.character(as.numeric(season) - 1)),
                         c(4, seq(12, 38, by = 2))]
-y_test <- Data_2002_21$rd_1[which(Data_2002_21[, 2] == as.character(season))]
-x_test <- Data_2002_21[which(Data_2002_21[, 2] == as.character(season)), c(4, seq(12, 38, by = 2))]
+y_test <- Data_2002_22$rd_1[which(Data_2002_22[, 2] == as.character(season))]
+x_test <- Data_2002_22[which(Data_2002_22[, 2] == as.character(season)), c(4, seq(12, 38, by = 2))]
 x_train <- as.matrix(x_train)
 x_test <- as.matrix(x_test)
 
@@ -57,16 +57,18 @@ for (j in 1:length(taus)){
 avg_prob <- apply(prob_matrix, 2, sum) * incr
 
 # arrange data by game matchup
-colnames(Data_2002_21)[1] <- "team" #rename the first column
-Rd1 <- subset(Data_2002_21, year == season, c("region", "team", "seed"))
+#not sure we need this colnames(Data_2002_22)[1] <- "team" #rename the first column
+Rd1 <- subset(Data_2002_22, year == season, c("region", "team", "seed"))
 Rd1 <- dplyr::arrange(Rd1, region, seed) #make sure that teams really are arranged by seed
-game.order <- rep(c(1:8, 8:1), 4)
-Rd1$game = game.order
+#game.order <- rep(c(1:8, 8:1), 4)
+#Rd1$game = game.order
 Rd1$prob = avg_prob
-Rd1 <- Rd1[, c("region", "game", "seed", "team", "prob")]
-Rd1 <- dplyr::arrange(Rd1, region, game, -prob, seed)
-win <- rep(c(1:0), 32)
-Rd1$win <- rep(c(1:0), 32)
+#Rd1 <- Rd1[, c("region", "game", "seed", "team", "prob")]
+#Rd1 <- dplyr::arrange(Rd1, region, game, -prob, seed)
+#win <- rep(c(1:0), 32)
+#Rd1$win <- rep(c(1:0), 32)
+win <- c(1, 1, 1, 1, 1, 1, 1, 0, 1, rep(0, 8), rep(1, 8), rep(0, 9), rep(1, 8), rep(0, 9), rep(1, 8), rep(0, 9))
+Rd1$win <- win
 
 # pull out winners only
 Rd1_winners <- subset(Rd1, Rd1$win == 1)
@@ -75,10 +77,10 @@ Rd1_winners
 ### Round 2
 
 # define the data
-y_train <- Data_2002_21$rd_2[which(Data_2002_21[, 6] == 1 & Data_2002_21[, 2] <= as.character(as.numeric(season) - 1))]
-x_train <- Data_2002_21[which(Data_2002_21[, 6] == 1 & Data_2002_21[, 2] <= as.character(as.numeric(season) - 1)), c(4, seq(12, 38, by = 2))]
-y_test <- Data_2002_21$rd_2[which(Data_2002_21[, 2] == as.character(season) & Data_2002_21[, 1] %in% Rd1_winners$team)]
-x_test <- Data_2002_21[which(Data_2002_21[, 2] == as.character(season) & Data_2002_21[, 1] %in% Rd1_winners$team), c(4, seq(12, 38, by = 2))]
+y_train <- Data_2002_22$rd_2[which(Data_2002_22[, 6] == 1 & Data_2002_22[, 2] <= as.character(as.numeric(season) - 1))]
+x_train <- Data_2002_22[which(Data_2002_22[, 6] == 1 & Data_2002_22[, 2] <= as.character(as.numeric(season) - 1)), c(4, seq(12, 38, by = 2))]
+y_test <- Data_2002_22$rd_2[which(Data_2002_22[, 2] == as.character(season) & Data_2002_22[, 1] %in% Rd1_winners$team)]
+x_test <- Data_2002_22[which(Data_2002_22[, 2] == as.character(season) & Data_2002_22[, 1] %in% Rd1_winners$team), c(4, seq(12, 38, by = 2))]
 x_train <- as.matrix(x_train)
 x_test <- as.matrix(x_test)
 
@@ -119,7 +121,8 @@ for (j in 1:length(taus)){
 avg_prob2 <- apply(prob_matrix, 2, sum) * incr
 
 # arrange games by matchup
-Rd2 <- Rd1_winners[, c(1, 3:4)]
+#Rd2 <- Rd1_winners[, c(1, 3:4)]
+Rd2 <- Rd1_winners[, c(1:3)]
 game.order <- rep(c(1:4, 4:1), 4)
 Rd2$game = game.order
 Rd2$prob = avg_prob2
@@ -135,10 +138,10 @@ Rd2_winners
 ### Round 3
 
 # define the data
-y_train <- Data_2002_21$rd_3[which(Data_2002_21[, 7] == 1 & Data_2002_21[, 2] <= as.character(as.numeric(season) - 1))]
-x_train <- Data_2002_21[which(Data_2002_21[, 7] == 1 & Data_2002_21[, 2] <= as.character(as.numeric(season) - 1)), c(4, seq(12, 38, by = 2))]
-y_test <- Data_2002_21$rd_3[which(Data_2002_21[, 2] == as.character(season) & Data_2002_21[, 1] %in% Rd2_winners$team)]
-x_test <- Data_2002_21[which(Data_2002_21[, 2] == as.character(season) & Data_2002_21[, 1] %in% Rd2_winners$team),
+y_train <- Data_2002_22$rd_3[which(Data_2002_22[, 7] == 1 & Data_2002_22[, 2] <= as.character(as.numeric(season) - 1))]
+x_train <- Data_2002_22[which(Data_2002_22[, 7] == 1 & Data_2002_22[, 2] <= as.character(as.numeric(season) - 1)), c(4, seq(12, 38, by = 2))]
+y_test <- Data_2002_22$rd_3[which(Data_2002_22[, 2] == as.character(season) & Data_2002_22[, 1] %in% Rd2_winners$team)]
+x_test <- Data_2002_22[which(Data_2002_22[, 2] == as.character(season) & Data_2002_22[, 1] %in% Rd2_winners$team),
                        c(4, seq(12, 38, by = 2))]
 x_train <- as.matrix(x_train)
 x_test <- as.matrix(x_test)
@@ -196,10 +199,10 @@ Rd3_winners
 ### Round 4
 
 # define the data
-y_train <- Data_2002_21$rd_4[which(Data_2002_21[, 8] == 1 & Data_2002_21[, 2] <= as.character(as.numeric(season) - 1))]
-x_train <- Data_2002_21[which(Data_2002_21[, 8] ==1 & Data_2002_21[, 2] <= as.character(as.numeric(season) - 1)), c(4, seq(12, 38, by = 2))]
-y_test <- Data_2002_21$rd_4[which(Data_2002_21[, 2] == as.character(season) & Data_2002_21[, 1] %in% Rd3_winners$team)]
-x_test <- Data_2002_21[which(Data_2002_21[, 2] == as.character(season) & Data_2002_21[, 1] %in% Rd3_winners$team),
+y_train <- Data_2002_22$rd_4[which(Data_2002_22[, 8] == 1 & Data_2002_22[, 2] <= as.character(as.numeric(season) - 1))]
+x_train <- Data_2002_22[which(Data_2002_22[, 8] ==1 & Data_2002_22[, 2] <= as.character(as.numeric(season) - 1)), c(4, seq(12, 38, by = 2))]
+y_test <- Data_2002_22$rd_4[which(Data_2002_22[, 2] == as.character(season) & Data_2002_22[, 1] %in% Rd3_winners$team)]
+x_test <- Data_2002_22[which(Data_2002_22[, 2] == as.character(season) & Data_2002_22[, 1] %in% Rd3_winners$team),
                        c(4, seq(12, 38, by = 2))]
 x_train <- as.matrix(x_train)
 x_test <- as.matrix(x_test)
@@ -255,10 +258,10 @@ Rd4_winners
 ### Round 5
 
 # define the data
-y_train <- Data_2002_21$rd_5[which(Data_2002_21[, 9] == 1 & Data_2002_21[, 2] <= as.character(as.numeric(season) - 1))]
-x_train <- Data_2002_21[which(Data_2002_21[, 9] == 1 & Data_2002_21[, 2] <= as.character(as.numeric(season) - 1)), c(4, seq(12, 38, by = 2))]
-y_test <- Data_2002_21$rd_5[which(Data_2002_21[, 2] == as.character(season) & Data_2002_21[, 1] %in% Rd4_winners$team)]
-x_test <- Data_2002_21[which(Data_2002_21[, 2] == as.character(season) & Data_2002_21[, 1] %in% Rd4_winners$team),
+y_train <- Data_2002_22$rd_5[which(Data_2002_22[, 9] == 1 & Data_2002_22[, 2] <= as.character(as.numeric(season) - 1))]
+x_train <- Data_2002_22[which(Data_2002_22[, 9] == 1 & Data_2002_22[, 2] <= as.character(as.numeric(season) - 1)), c(4, seq(12, 38, by = 2))]
+y_test <- Data_2002_22$rd_5[which(Data_2002_22[, 2] == as.character(season) & Data_2002_22[, 1] %in% Rd4_winners$team)]
+x_test <- Data_2002_22[which(Data_2002_22[, 2] == as.character(season) & Data_2002_22[, 1] %in% Rd4_winners$team),
                        c(4, seq(12, 38, by = 2))]
 x_train <- as.matrix(x_train)
 x_test <- as.matrix(x_test)
@@ -318,10 +321,10 @@ Rd5_winners
 ### Round 6
 
 # define the data
-y_train <- Data_2002_21$rd_6[which(Data_2002_21[, 10] == 1 & Data_2002_21[, 2] <= as.character(as.numeric(season) - 1))]
-x_train <- Data_2002_21[which(Data_2002_21[, 10] == 1 & Data_2002_21[, 2] <= as.character(as.numeric(season) - 1)), c(4, seq(12, 38, by = 2))]
-y_test <- Data_2002_21$rd_6[which(Data_2002_21[, 2] == as.character(season) & Data_2002_21[, 1] %in% Rd5_winners$team)]
-x_test <- Data_2002_21[which(Data_2002_21[, 2] == as.character(season) & Data_2002_21[, 1] %in% Rd5_winners$team),
+y_train <- Data_2002_22$rd_6[which(Data_2002_22[, 10] == 1 & Data_2002_22[, 2] <= as.character(as.numeric(season) - 1))]
+x_train <- Data_2002_22[which(Data_2002_22[, 10] == 1 & Data_2002_22[, 2] <= as.character(as.numeric(season) - 1)), c(4, seq(12, 38, by = 2))]
+y_test <- Data_2002_22$rd_6[which(Data_2002_22[, 2] == as.character(season) & Data_2002_22[, 1] %in% Rd5_winners$team)]
+x_test <- Data_2002_22[which(Data_2002_22[, 2] == as.character(season) & Data_2002_22[, 1] %in% Rd5_winners$team),
                        c(4, seq(12, 38, by = 2))]
 x_train <- as.matrix(x_train)
 x_test <- as.matrix(x_test)

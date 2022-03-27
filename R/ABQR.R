@@ -3,9 +3,9 @@ path = 'data/Data_2002_22.rda'
 load(path)
 
 #declare the season for round 5 matchups between regions
-season <- "2022"
+season <- "2016"
 #matchup options for Rd. 5: 1 (East v. Midwest), 2 (East v. South), 3 (East v. West)
-matchup <- 3
+matchup <- 1
 
 ## 2019 option 3, 2018 option 1, 2017 option 3, 2016 option 1, 2015 option 2, 2021 option 3
 
@@ -60,14 +60,13 @@ avg_prob <- apply(prob_matrix, 2, sum) * incr
 #not sure we need this colnames(Data_2002_22)[1] <- "team" #rename the first column
 Rd1 <- subset(Data_2002_22, year == season, c("region", "team", "seed"))
 Rd1 <- dplyr::arrange(Rd1, region, seed) #make sure that teams really are arranged by seed
-#game.order <- rep(c(1:8, 8:1), 4)
-#Rd1$game = game.order
+game.order <- rep(c(1:8, 8:1), 4)
+Rd1$game = game.order
 Rd1$prob = avg_prob
-#Rd1 <- Rd1[, c("region", "game", "seed", "team", "prob")]
-#Rd1 <- dplyr::arrange(Rd1, region, game, -prob, seed)
-#win <- rep(c(1:0), 32)
-#Rd1$win <- rep(c(1:0), 32)
-win <- c(1, 1, 1, 1, 1, 1, 1, 0, 1, rep(0, 8), rep(1, 8), rep(0, 9), rep(1, 8), rep(0, 9), rep(1, 8), rep(0, 9))
+Rd1 <- Rd1[, c("region", "game", "seed", "team", "prob")]
+Rd1 <- dplyr::arrange(Rd1, region, game, -prob, seed)
+win <- rep(c(1:0), 32)
+Rd1$win <- rep(c(1:0), 32)
 Rd1$win <- win
 
 # pull out winners only
@@ -121,8 +120,7 @@ for (j in 1:length(taus)){
 avg_prob2 <- apply(prob_matrix, 2, sum) * incr
 
 # arrange games by matchup
-#Rd2 <- Rd1_winners[, c(1, 3:4)]
-Rd2 <- Rd1_winners[, c(1:3)]
+Rd2 <- Rd1_winners[, c(1, 3:4)]
 game.order <- rep(c(1:4, 4:1), 4)
 Rd2$game = game.order
 Rd2$prob = avg_prob2

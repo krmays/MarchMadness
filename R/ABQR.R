@@ -3,9 +3,9 @@ path = 'data/Data_2002_22.rda'
 load(path)
 
 #declare the season for round 5 matchups between regions
-season <- "2016"
+season <- "2019"
 #matchup options for Rd. 5: 1 (East v. Midwest), 2 (East v. South), 3 (East v. West)
-matchup <- 1
+matchup <- 3
 
 ## 2019 option 3, 2018 option 1, 2017 option 3, 2016 option 1, 2015 option 2, 2021 option 3
 
